@@ -24,11 +24,36 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 });
 
-document.getElementById('videoFile').addEventListener('change', (e) => {
+document.getElementById('videoFile').addEventListener('change', async (e) => {
     const file = e.target.files[0];
     if (file) {
         inputFileName = file.name;
         document.getElementById('convertBtn').disabled = false;
+        
+        const previewContainer = document.getElementById('previewContainer');
+        const videoPreview = document.getElementById('videoPreview');
+        previewContainer.style.display = 'block';
+        
+        videoPreview.src = URL.createObjectURL(file);
+        
+        const fileInfo = document.querySelector('.file-info');
+        fileInfo.innerHTML = `
+            <p>File name: <span>${file.name}</span></p>
+            <p>File size: <span id="fileSize">${(file.size / (1024 * 1024)).toFixed(2)} MB</span></p>
+            <p>Duration: <span id="duration">Loading...</span></p>
+            <p>Resolution: <span id="resolution">Loading...</span></p>
+        `;
+        
+        videoPreview.onloadedmetadata = function() {
+            const duration = Math.round(videoPreview.duration);
+            const minutes = Math.floor(duration / 60);
+            const seconds = duration % 60;
+            document.getElementById('duration').textContent = 
+                `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            
+            document.getElementById('resolution').textContent = 
+                `${this.videoWidth}x${this.videoHeight}`;
+        };
     }
 });
 
@@ -47,6 +72,11 @@ document.getElementById('convertBtn').addEventListener('click', async () => {
     downloadLink.style.display = 'none';
 
     try {
+        const videoPreview = document.getElementById('videoPreview');
+        if (videoPreview.src) {
+            URL.revokeObjectURL(videoPreview.src);
+        }
+
         const inputName = 'input' + getExtension(file.name);
         const outputName = `output.${format}`;
 
