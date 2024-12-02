@@ -4,5 +4,13 @@
   "main": "server.js",
   "dependencies": {
     "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.3.2",
+    "postcss": "^8.4.16",
+    "autoprefixer": "^10.4.7"
+  },
+  "scripts": {
+    "build:css": "tailwindcss -i ./src/input.css -o ./styles.css"
   }
 }
