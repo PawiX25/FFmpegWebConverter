@@ -36,23 +36,19 @@ document.getElementById('videoFile').addEventListener('change', async (e) => {
         
         videoPreview.src = URL.createObjectURL(file);
         
-        const fileInfo = document.querySelector('.file-info');
-        fileInfo.innerHTML = `
-            <p>File name: <span>${file.name}</span></p>
-            <p>File size: <span id="fileSize">${(file.size / (1024 * 1024)).toFixed(2)} MB</span></p>
-            <p>Duration: <span id="duration">Loading...</span></p>
-            <p>Resolution: <span id="resolution">Loading...</span></p>
-        `;
-        
+        document.getElementById('fileSize').textContent = `${(file.size / (1024 * 1024)).toFixed(2)} MB`;
+        document.getElementById('duration').textContent = 'Loading...';
+        document.getElementById('resolution').textContent = 'Loading...';
+
         videoPreview.onloadedmetadata = function() {
             const duration = Math.round(videoPreview.duration);
             const minutes = Math.floor(duration / 60);
-            const seconds = duration % 60;
+            const seconds = Math.floor(duration % 60);
             document.getElementById('duration').textContent = 
                 `${minutes}:${seconds.toString().padStart(2, '0')}`;
             
             document.getElementById('resolution').textContent = 
-                `${this.videoWidth}x${this.videoHeight}`;
+                `${videoPreview.videoWidth}x${videoPreview.videoHeight}`;
             
             document.getElementById('endTime').value = duration;
             document.getElementById('endTime').max = duration;
