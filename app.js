@@ -63,6 +63,7 @@ document.getElementById('videoFile').addEventListener('change', async (e) => {
 
 document.getElementById('convertBtn').addEventListener('click', async () => {
     const format = document.getElementById('formatSelect').value;
+    const quality = document.getElementById('qualitySelect').value;
     const file = document.getElementById('videoFile').files[0];
     
     if (!file) return;
@@ -102,16 +103,33 @@ document.getElementById('convertBtn').addEventListener('click', async () => {
 
         switch (format) {
             case 'mp4':
-                ffmpegCommand = [...trimParams, '-i', inputName, '-c:v', 'libx264', outputName];
+                const crf = quality === 'high' ? '18' : quality === 'medium' ? '23' : '28';
+                ffmpegCommand = [
+                    ...trimParams, 
+                    '-i', inputName, 
+                    '-c:v', 'libx264', 
+                    '-crf', crf,
+                    '-preset', 'medium',
+                    outputName
+                ];
                 break;
             case 'webm':
-                ffmpegCommand = [...trimParams, '-i', inputName, '-c:v', 'libvpx', '-c:a', 'libvorbis', outputName];
+                const vbitrate = quality === 'high' ? '1M' : quality === 'medium' ? '750k' : '500k';
+                ffmpegCommand = [
+                    ...trimParams, 
+                    '-i', inputName, 
+                    '-c:v', 'libvpx',
+                    '-b:v', vbitrate,
+                    '-c:a', 'libvorbis',
+                    outputName
+                ];
                 break;
             case 'gif':
+                const scale = quality === 'high' ? '640:-1' : quality === 'medium' ? '480:-1' : '320:-1';
                 ffmpegCommand = [
                     ...trimParams,
                     '-i', inputName,
-                    '-vf', 'fps=10,scale=320:-1:flags=lanczos',
+                    '-vf', `fps=10,scale=${scale}:flags=lanczos`,
                     outputName
                 ];
                 break;

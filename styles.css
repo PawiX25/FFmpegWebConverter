@@ -55,6 +55,10 @@ input[type="file"] {
     margin-bottom: 1.5rem;
 }
 
+.quality-select {
+    margin-top: 1rem;
+}
+
 .trim-controls {
     display: flex;
     gap: 1rem;
@@ -85,6 +89,7 @@ select {
     border: 1px solid #ddd;
     border-radius: 5px;
     font-size: 1rem;
+    margin-bottom: 0.5rem;
 }
 
 #convertBtn {
