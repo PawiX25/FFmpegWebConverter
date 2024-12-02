@@ -6,54 +6,92 @@
     <title>Video Converter</title>
     <link href="styles.css" rel="stylesheet">
 </head>
-<body class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 min-h-screen flex items-center justify-center p-6">
-    <div class="bg-white/95 backdrop-blur-lg p-8 rounded-2xl shadow-2xl w-full max-w-xl border border-gray-200">
-        <div id="loading" class="loading text-indigo-600 font-medium text-center animate-pulse">Loading FFmpeg...</div>
-        <h1 class="text-3xl font-extrabold text-center mb-8 bg-gradient-to-r from-indigo-600 to-purple-600 text-transparent bg-clip-text">Browser Video Converter</h1>
+<body class="bg-gray-900 min-h-screen flex items-center justify-center p-6">
+    <div class="bg-gray-800 p-8 rounded-xl shadow-2xl w-full max-w-2xl border border-gray-700">
+        <div id="loading" class="loading text-blue-400 font-medium text-center animate-pulse mb-6">
+            <svg class="animate-spin h-8 w-8 mx-auto mb-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            Loading FFmpeg...
+        </div>
+        <h1 class="text-4xl font-bold text-center mb-8 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">
+            Browser Video Converter
+        </h1>
+
         <div class="mb-8">
+            <div class="text-gray-400 text-sm mb-3">STEP 1: Select Video</div>
             <input type="file" id="videoFile" accept="video/*" class="hidden">
-            <label for="videoFile" class="block bg-gradient-to-r from-green-500 to-emerald-600 text-white py-4 px-6 text-center rounded-lg cursor-pointer transition-all duration-300 hover:from-green-600 hover:to-emerald-700 hover:shadow-lg transform hover:-translate-y-0.5 font-medium">
-                Choose Video File
+            <label for="videoFile" class="block bg-gradient-to-r from-blue-500 to-purple-600 text-white py-4 px-6 text-center rounded-lg cursor-pointer transition-all duration-300 hover:from-blue-600 hover:to-purple-700 hover:shadow-xl transform hover:-translate-y-0.5">
+                <span class="flex items-center justify-center">
+                    <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
+                    </svg>
+                    Choose Video File
+                </span>
             </label>
         </div>
-        <div id="previewContainer" class="mb-8 text-center" style="display: none;">
-            <video id="videoPreview" controls class="mx-auto mb-6 rounded-lg shadow-md"></video>
-            <div class="bg-gray-50 p-6 rounded-xl border border-gray-200 shadow-sm">
-                <p class="text-gray-700 mb-2 flex items-center"><span class="font-medium mr-2">File size:</span><span id="fileSize" class="text-gray-600"></span></p>
-                <p class="text-gray-700 mb-2 flex items-center"><span class="font-medium mr-2">Duration:</span><span id="duration" class="text-gray-600"></span></p>
-                <p class="text-gray-700 flex items-center"><span class="font-medium mr-2">Resolution:</span><span id="resolution" class="text-gray-600"></span></p>
+        <div id="previewContainer" class="mb-8 text-center hidden">
+            <video id="videoPreview" controls class="mx-auto mb-6 rounded-lg shadow-lg w-full"></video>
+            <div class="bg-gray-700 p-6 rounded-xl border border-gray-600">
+                <div class="grid grid-cols-3 gap-4">
+                    <div class="text-center">
+                        <div class="text-gray-400 text-sm mb-1">File Size</div>
+                        <div id="fileSize" class="text-white font-medium"></div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-gray-400 text-sm mb-1">Duration</div>
+                        <div id="duration" class="text-white font-medium"></div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-gray-400 text-sm mb-1">Resolution</div>
+                        <div id="resolution" class="text-white font-medium"></div>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="options space-y-6 mb-8">
-            <select id="formatSelect" class="w-full p-4 border border-gray-300 rounded-lg bg-gray-50 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300">
-                <option value="mp4">MP4</option>
-                <option value="webm">WebM</option>
-                <option value="gif">GIF</option>
-            </select>
-            <select id="qualitySelect" class="w-full p-4 border border-gray-300 rounded-lg bg-gray-50 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300">
-                <option value="high">High Quality</option>
-                <option value="medium">Medium Quality</option>
-                <option value="low">Low Quality</option>
-            </select>
-            <div class="grid grid-cols-2 gap-6">
+            <div class="text-gray-400 text-sm mb-3">STEP 2: Configure Settings</div>
+            <div class="grid grid-cols-2 gap-4">
+                <select id="formatSelect" class="w-full p-4 border border-gray-600 rounded-lg bg-gray-700 text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300">
+                    <option value="mp4">MP4</option>
+                    <option value="webm">WebM</option>
+                    <option value="gif">GIF</option>
+                </select>
+                <select id="qualitySelect" class="w-full p-4 border border-gray-600 rounded-lg bg-gray-700 text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300">
+                    <option value="high">High Quality</option>
+                    <option value="medium">Medium Quality</option>
+                    <option value="low">Low Quality</option>
+                </select>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
                 <div>
-                    <label for="startTime" class="block mb-2 text-gray-700 font-medium">Start Time (seconds)</label>
-                    <input type="number" id="startTime" value="0" min="0" step="0.1" class="w-full p-4 border border-gray-300 rounded-lg bg-gray-50 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300">
+                    <label for="startTime" class="block mb-2 text-gray-300 text-sm">Start Time (seconds)</label>
+                    <input type="number" id="startTime" value="0" min="0" step="0.1" class="w-full p-4 border border-gray-600 rounded-lg bg-gray-700 text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300">
                 </div>
                 <div>
-                    <label for="endTime" class="block mb-2 text-gray-700 font-medium">End Time (seconds)</label>
-                    <input type="number" id="endTime" min="0" step="0.1" class="w-full p-4 border border-gray-300 rounded-lg bg-gray-50 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300">
+                    <label for="endTime" class="block mb-2 text-gray-300 text-sm">End Time (seconds)</label>
+                    <input type="number" id="endTime" min="0" step="0.1" class="w-full p-4 border border-gray-600 rounded-lg bg-gray-700 text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300">
                 </div>
             </div>
         </div>
-        <button id="convertBtn" disabled class="w-full py-4 px-6 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg transition-all duration-300 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed hover:from-blue-600 hover:to-indigo-700 hover:shadow-lg transform hover:-translate-y-0.5 font-medium">
-            Convert
+        <div class="text-gray-400 text-sm mb-3">STEP 3: Convert</div>
+        <button id="convertBtn" disabled class="w-full py-4 px-6 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg transition-all duration-300 disabled:from-gray-700 disabled:to-gray-600 disabled:cursor-not-allowed hover:from-blue-600 hover:to-purple-700 hover:shadow-xl transform hover:-translate-y-0.5 font-medium">
+            Start Conversion
         </button>
-        <div id="progress" class="mt-8 h-4 bg-gray-200 rounded-full overflow-hidden" style="display: none;">
-            <div class="progress-bar h-full bg-gradient-to-r from-green-500 to-emerald-600 transition-all duration-300" style="width: 0%;"></div>
+        <div id="progress" class="mt-8 hidden">
+            <div class="text-gray-400 text-sm mb-2">Converting...</div>
+            <div class="h-2 bg-gray-700 rounded-full overflow-hidden">
+                <div class="progress-bar h-full bg-gradient-to-r from-blue-500 to-purple-600 transition-all duration-300" style="width: 0%"></div>
+            </div>
         </div>
-        <a id="downloadLink" style="display: none;" class="block bg-gradient-to-r from-green-500 to-emerald-600 text-white py-4 px-6 text-center rounded-lg mt-8 transition-all duration-300 hover:from-green-600 hover:to-emerald-700 hover:shadow-lg transform hover:-translate-y-0.5 font-medium">
-            Download Converted File
+        <a id="downloadLink" class="hidden mt-8 block bg-gradient-to-r from-green-500 to-teal-600 text-white py-4 px-6 text-center rounded-lg transition-all duration-300 hover:from-green-600 hover:to-teal-700 hover:shadow-xl transform hover:-translate-y-0.5 font-medium">
+            <span class="flex items-center justify-center">
+                <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                </svg>
+                Download Converted File
+            </span>
         </a>
     </div>
     <script src="https://unpkg.com/@ffmpeg/ffmpeg@0.11.0/dist/ffmpeg.min.js" crossorigin="anonymous"></script>
