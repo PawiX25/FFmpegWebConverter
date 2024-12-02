@@ -53,6 +53,10 @@ document.getElementById('videoFile').addEventListener('change', async (e) => {
             
             document.getElementById('resolution').textContent = 
                 `${this.videoWidth}x${this.videoHeight}`;
+            
+            document.getElementById('endTime').value = duration;
+            document.getElementById('endTime').max = duration;
+            document.getElementById('startTime').max = duration;
         };
     }
 });
@@ -83,15 +87,29 @@ document.getElementById('convertBtn').addEventListener('click', async () => {
         ffmpeg.FS('writeFile', inputName, await fetchFile(file));
 
         let ffmpegCommand;
+        const startTime = document.getElementById('startTime').value;
+        const endTime = document.getElementById('endTime').value;
+        const trimParams = [];
+        
+        if (startTime > 0 || endTime < videoPreview.duration) {
+            if (startTime > 0) {
+                trimParams.push('-ss', startTime);
+            }
+            if (endTime < videoPreview.duration) {
+                trimParams.push('-t', (endTime - startTime).toString());
+            }
+        }
+
         switch (format) {
             case 'mp4':
-                ffmpegCommand = ['-i', inputName, '-c:v', 'libx264', outputName];
+                ffmpegCommand = [...trimParams, '-i', inputName, '-c:v', 'libx264', outputName];
                 break;
             case 'webm':
-                ffmpegCommand = ['-i', inputName, '-c:v', 'libvpx', '-c:a', 'libvorbis', outputName];
+                ffmpegCommand = [...trimParams, '-i', inputName, '-c:v', 'libvpx', '-c:a', 'libvorbis', outputName];
                 break;
             case 'gif':
                 ffmpegCommand = [
+                    ...trimParams,
                     '-i', inputName,
                     '-vf', 'fps=10,scale=320:-1:flags=lanczos',
                     outputName
